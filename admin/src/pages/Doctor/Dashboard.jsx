@@ -1,0 +1,17 @@
+import React, { useContext, useEffect, useState } from 'react'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import { AdminContext } from '../../context/AdminContext'
+
+const Dashboard = () => {
+  const { backendUrl, atoken } = useContext(AdminContext)
+  const [doctor, setDoctor] = useState(null)
+  const [appointments, setAppointments] = useState([])
+  const [busy, setBusy] = useState(false)
+  const load = async () => { try { const [profile, visits] = await Promise.all([axios.get(`${backendUrl}/api/doctor/profile`, { headers: { atoken } }), axios.get(`${backendUrl}/api/doctor/appointments`, { headers: { atoken } })]); if (profile.data.success) setDoctor(profile.data.doctor); if (visits.data.success) setAppointments(visits.data.appointments) } catch (error) { toast.error(error.response?.data?.message || error.message) } }
+  useEffect(() => { load() }, [atoken])
+  const toggleAvailability = async () => { setBusy(true); try { const { data } = await axios.post(`${backendUrl}/api/doctor/availability`, {}, { headers: { atoken } }); if (!data.success) return toast.error(data.message); toast.success(data.message); setDoctor((current) => ({ ...current, available: data.available })) } catch (error) { toast.error(error.response?.data?.message || error.message) } finally { setBusy(false) } }
+  return <main className='flex-1 p-5 sm:p-8 max-w-7xl'><div className='flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-8'><div><p className='admin-eyebrow'>Doctor workspace</p><h1 className='text-4xl font-semibold mt-2'>Good morning{doctor ? `, ${doctor.name.replace('Dr. ', '')}` : ''}.</h1><p className='text-gray-500 text-lg mt-1'>Your practice, your patients, your rhythm.</p></div><button onClick={toggleAvailability} disabled={busy} className={`rounded-full px-5 py-3 font-semibold ${doctor?.available ? 'bg-[#e6f4f1] text-[#0f766e]' : 'bg-red-50 text-red-500'}`}>{doctor?.available ? '● Available for visits' : '○ Currently unavailable'}</button></div><div className='grid sm:grid-cols-3 gap-4 mb-8'><div className='admin-card rounded-2xl p-5'><p className='text-gray-500'>Total appointments</p><p className='text-4xl font-semibold mt-3'>{appointments.length}</p></div><div className='admin-card rounded-2xl p-5'><p className='text-gray-500'>Upcoming visits</p><p className='text-4xl font-semibold mt-3'>{appointments.filter((item) => !item.cancelled).length}</p></div><div className='admin-card rounded-2xl p-5'><p className='text-gray-500'>Specialty</p><p className='text-2xl font-semibold mt-4'>{doctor?.speciality || 'Loading'}</p></div></div><section className='admin-card rounded-2xl overflow-hidden'><div className='p-5 border-b border-[#dce7e2]'><p className='admin-eyebrow'>Your schedule</p><h2 className='text-2xl font-semibold mt-1'>Recent patient visits</h2></div><div className='divide-y divide-[#e8efec]'>{appointments.slice(0, 5).map((appointment) => <div key={appointment._id} className='p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3'><div><p className='font-semibold'>{appointment.userData?.name || 'Patient'}</p><p className='text-sm text-gray-500'>{appointment.slotDate} · {appointment.slotTime}</p></div><span className={`rounded-full px-3 py-1 text-xs font-semibold w-fit ${appointment.cancelled ? 'bg-red-50 text-red-500' : 'bg-[#e6f4f1] text-[#0f766e]'}`}>{appointment.cancelled ? 'Cancelled' : 'Confirmed'}</span></div>)}{appointments.length === 0 && <p className='p-8 text-gray-500'>No appointments yet.</p>}</div></section></main>
+}
+
+export default Dashboard

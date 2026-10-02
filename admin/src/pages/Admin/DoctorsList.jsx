@@ -20,7 +20,7 @@ const DoctorsList = () => {
         {
           doctors.map((item,index)=>(
             <div className='border border-indigo-200 rounded-xl max-w-50 overflow-hidden cursor-pointer group' key={index}>
-              <img className='bg-indigo-50 group-hover:bg-[#5F6FFF] transition-all duration-300' src={item.image} alt="" />
+              <img className='bg-[#e6f4f1] group-hover:bg-[#0f766e] transition-all duration-300' src={item.image} alt="" />
               <div className='p-4'>
                 <p className='text-neutral-800 text-lg font-medium'>{item.name}</p>
                 <p className='text-zinc-600 text-sm'>{item.speciality}</p>

@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
+import { AdminContext } from '../../context/AdminContext'
 
 const AllAppointments = () => {
-  return (
-    <div>AllAppointments</div>
-  )
+  const { appointments, getAllAppointments } = useContext(AdminContext)
+  useEffect(() => { getAllAppointments() }, [])
+  return <main className='flex-1 p-5 sm:p-8 max-w-7xl'><div className='mb-8'><p className='admin-eyebrow'>Practice activity</p><h1 className='text-4xl font-semibold mt-2'>All appointments</h1><p className='text-gray-500 text-lg mt-1'>Every patient visit, in one clear view.</p></div><section className='admin-card rounded-2xl overflow-hidden'><div className='p-5 border-b border-[#dce7e2]'><span className='text-sm text-gray-500'>{appointments.length} total appointments</span></div><div className='overflow-x-auto'><table className='w-full min-w-[760px] text-left text-sm'><thead className='bg-[#f4f7f5] text-gray-500'><tr><th className='p-4'>Patient</th><th className='p-4'>Doctor</th><th className='p-4'>Specialty</th><th className='p-4'>Visit</th><th className='p-4'>Amount</th><th className='p-4'>Status</th></tr></thead><tbody>{appointments.map((appointment) => <tr key={appointment._id} className='border-t border-[#e8efec]'><td className='p-4 font-semibold'>{appointment.userData?.name || 'Patient'}<br /><span className='text-xs font-normal text-gray-400'>{appointment.userData?.email}</span></td><td className='p-4 text-gray-600'>{appointment.docData?.name}</td><td className='p-4 text-gray-600'>{appointment.docData?.speciality}</td><td className='p-4 text-gray-600'>{appointment.slotDate}<br />{appointment.slotTime}</td><td className='p-4 text-gray-600'>${appointment.amount}</td><td className='p-4'><span className={`rounded-full px-3 py-1 text-xs font-semibold ${appointment.cancelled ? 'bg-red-50 text-red-500' : 'bg-[#e6f4f1] text-[#0f766e]'}`}>{appointment.cancelled ? 'Cancelled' : 'Confirmed'}</span></td></tr>)}</tbody></table>{appointments.length === 0 && <p className='p-8 text-center text-gray-500'>No appointments found.</p>}</div></section></main>
 }
 
 export default AllAppointments

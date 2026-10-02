@@ -2,6 +2,8 @@ import validator from 'validator'
 import bcrypt from 'bcrypt'
 import {v2 as cloudinary} from 'cloudinary'
 import doctorModel from '../models/doctorModel.js'
+import userModel from '../models/userModel.js'
+import appointmentModel from '../models/appointmentModel.js'
 import jwt from 'jsonwebtoken'
 
 // api for adding doctor
@@ -9,7 +11,8 @@ const addDoctor =async(req,res)=>{
 
     try {
 
-        const {name,email,password,speciality,degree,experience,about,fees,address}=req.body;
+        const {name,password,speciality,degree,experience,about,fees,address}=req.body;
+        const email = req.body.email?.trim().toLowerCase();
         const imageFile =req.file;
         //checking for all data to add doctor
 
@@ -68,7 +71,8 @@ const addDoctor =async(req,res)=>{
 const loginAdmin =async (req,res)=>{
      try {
         
-        const {email,password}=req.body;
+        const email = req.body.email?.trim().toLowerCase();
+        const {password}=req.body;
 
         if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
 
@@ -98,4 +102,45 @@ const allDoctors =async (req,res)=>{
     }
 }
 
-export {addDoctor,loginAdmin,allDoctors}
+const dashboardData = async (req, res) => {
+    try {
+        const [doctors, users, appointments, activeAppointments, recentAppointments] = await Promise.all([
+            doctorModel.countDocuments(),
+            userModel.countDocuments(),
+            appointmentModel.countDocuments(),
+            appointmentModel.countDocuments({ cancelled: false }),
+            appointmentModel.find({}).sort({ date: -1 }).limit(6).select('-userData.password -docData.password'),
+        ]);
+
+        res.json({
+            success: true,
+            stats: { doctors, users, appointments, activeAppointments },
+            recentAppointments,
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+const allAppointments = async (req, res) => {
+    try {
+        const appointments = await appointmentModel.find({}).sort({ date: -1 }).select('-userData.password -docData.password');
+        res.json({ success: true, appointments });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+const allUsers = async (req, res) => {
+    try {
+        const users = await userModel.find({}).select('-password').sort({ _id: -1 });
+        res.json({ success: true, users });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export { addDoctor, loginAdmin, allDoctors, dashboardData, allAppointments, allUsers }

@@ -4,6 +4,7 @@ import userModel from '../models/userModel.js';
 import jwt from 'jsonwebtoken'
 import {v2 as cloudinary} from 'cloudinary'
 import doctorModel from '../models/doctorModel.js';
+import appointmentModel from '../models/appointmentModel.js';
 
 //api to register user
 const registerUser =async (req,res)=>{
@@ -141,38 +142,87 @@ const updateProfile = async (req, res) => {
 //api to book appointment
 const bookAppointment =async (req,res)=>{
   try {
-    
-    const userId=req.user.id;
-    const {docId,slotDate,slotTime}=req.body;
+    const userId = req.user.id;
+    const { docId, slotDate, slotTime } = req.body;
 
-    const docData =await doctorModel.findById(docId).select('-password');
-
-    if(!docData.available){
-      return res.json({success:false,message:"Doctor not available"});
-
-    let slots_booked =docData.slots_booked
-
-    //cheking for slots avilablity
-    if(slots_booked[slotDate]){
-      if(slots_booked[slotDate].includes(slotTime)){
-        return res.json({success:false,message:'Slot not available'});
-      }
-      else{
-        slots_booked[slotDate].push(slotTime)
-
-      }
+    if (!docId || !slotDate || !slotTime) {
+      return res.json({ success: false, message: 'Doctor, date, and time are required' });
     }
 
-    }
-    else{
-      slots_booked[slotDate]=[]
-      slots_booked[slotDate].push(slotTime)
+    const docData = await doctorModel.findById(docId).select('-password');
+    const userData = await userModel.findById(userId).select('-password');
 
-      
+    if (!docData || !userData) {
+      return res.json({ success: false, message: 'Doctor or user not found' });
     }
+
+    if (!docData.available) {
+      return res.json({ success: false, message: 'Doctor not available' });
+    }
+
+    const slotsBooked = docData.slots_booked || {};
+    if (slotsBooked[slotDate]?.includes(slotTime)) {
+      return res.json({ success: false, message: 'Slot not available' });
+    }
+
+    slotsBooked[slotDate] = [...(slotsBooked[slotDate] || []), slotTime];
+    await doctorModel.findByIdAndUpdate(docId, { slots_booked: slotsBooked });
+
+    await appointmentModel.create({
+      userId,
+      docId,
+      slotDate,
+      slotTime,
+      userData,
+      docData,
+      amount: docData.fees,
+      date: Date.now(),
+    });
+
+    return res.json({ success: true, message: 'Appointment booked successfully' });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    console.log(error);
+    return res.json({ success: false, message: error.message });
   }
 }
 
-export {registerUser,loginUser,getProfile,updateProfile};
+const getAppointments = async (req, res) => {
+  try {
+    const appointments = await appointmentModel.find({ userId: req.user.id }).sort({ date: -1 });
+    return res.json({ success: true, appointments });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+const cancelAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+    const appointment = await appointmentModel.findOne({ _id: appointmentId, userId: req.user.id });
+
+    if (!appointment) {
+      return res.json({ success: false, message: 'Appointment not found' });
+    }
+    if (appointment.cancelled) {
+      return res.json({ success: false, message: 'Appointment is already cancelled' });
+    }
+
+    const doctor = await doctorModel.findById(appointment.docId);
+    if (doctor) {
+      const slotsBooked = doctor.slots_booked || {};
+      slotsBooked[appointment.slotDate] = (slotsBooked[appointment.slotDate] || [])
+        .filter((slot) => slot !== appointment.slotTime);
+      await doctorModel.findByIdAndUpdate(doctor._id, { slots_booked: slotsBooked });
+    }
+
+    appointment.cancelled = true;
+    await appointment.save();
+    return res.json({ success: true, message: 'Appointment cancelled' });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, getAppointments, cancelAppointment };

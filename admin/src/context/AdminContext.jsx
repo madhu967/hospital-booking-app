@@ -9,8 +9,12 @@ const AdminContextProvider = (props) => {
   const [atoken, setAToken] = useState(
     localStorage.getItem("atoken") ? localStorage.getItem("atoken") : ""
   );
+  const [role, setRole] = useState(localStorage.getItem("role") || "Admin");
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [doctors, setDoctors] = useState([]);
+  const [dashboard, setDashboard] = useState({ stats: {}, recentAppointments: [] });
+  const [appointments, setAppointments] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const getAllDoctors = async () => {
     try {
@@ -28,6 +32,30 @@ const AdminContextProvider = (props) => {
     } catch (error) {
       toast.error(error.message);
     }
+  };
+
+  const getDashboard = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/admin/dashboard", { headers: { atoken } });
+      if (data.success) setDashboard({ stats: data.stats, recentAppointments: data.recentAppointments });
+      else toast.error(data.message);
+    } catch (error) { toast.error(error.message); }
+  };
+
+  const getAllAppointments = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/admin/all-appointments", { headers: { atoken } });
+      if (data.success) setAppointments(data.appointments);
+      else toast.error(data.message);
+    } catch (error) { toast.error(error.message); }
+  };
+
+  const getAllUsers = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/admin/all-users", { headers: { atoken } });
+      if (data.success) setUsers(data.users);
+      else toast.error(data.message);
+    } catch (error) { toast.error(error.message); }
   };
 
   const changeAvailabilty = async (docId) => {
@@ -49,10 +77,11 @@ const AdminContextProvider = (props) => {
   };
   const value = {
     atoken,
-    setAToken,
+    setAToken: (token) => { setAToken(token); setRole(localStorage.getItem("role") || "Admin"); },
+    role,
     backendUrl,
     getAllDoctors,
-    doctors,changeAvailabilty
+    doctors,changeAvailabilty,dashboard,getDashboard,appointments,getAllAppointments,users,getAllUsers
   };
 
   return (
