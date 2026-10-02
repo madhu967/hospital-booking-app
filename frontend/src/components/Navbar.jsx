@@ -18,56 +18,48 @@ const Navbar = () => {
     
 
   return (
-    <div className='flex items-center justify-between text-sm py-5 mb-2 border-b border-b-[#dce7e2]'>
+    <div className='flex items-center justify-between py-4 mb-2 border-b border-b-[#dce7e2] sticky top-0 z-30 bg-[#f4f7f5]/90 backdrop-blur-md'>
         <img onClick={()=>navigate('/')} className='w-44 cursor-pointer' src={assets.logo} alt="" />
-        <ul className='hidden md:flex items-center gap-7 font-semibold text-[#52615d]'>
-            <NavLink to='/'>
-                <li className='py-1'>HOME</li>
-                <hr className='border-none outline-none h-0.5 bg-[#0f766e] w-3/5 m-auto hidden' />
-            </NavLink>
-            <NavLink to='/doctors'>
-                <li className='py-1'>DOCTORS</li>
-                <hr className='border-none outline-none h-0.5 bg-[#0f766e] w-3/5 m-auto hidden' />
-            </NavLink>
-            <NavLink to='/about'>
-                <li className='py-1'>OUR STORY</li>
-                <hr className='border-none outline-none h-0.5 bg-[#0f766e] w-3/5 m-auto hidden' />
-            </NavLink>
-            <NavLink to='/contact'>
-                <li className='py-1'>CONTACT</li>
-                <hr className='border-none outline-none h-0.5 bg-[#0f766e] w-3/5 m-auto hidden' />
-            </NavLink>
+        <ul className='hidden md:flex items-center gap-1 font-semibold text-[#52615d] text-sm'>
+            {[['/', 'HOME'], ['/doctors', 'DOCTORS'], ['/about', 'OUR STORY'], ['/contact', 'CONTACT']].map(([path, label]) => (
+              <NavLink key={path} to={path} className={({isActive}) => `relative px-4 py-2 rounded-full transition-colors ${isActive ? 'text-[#0f766e] bg-[#e6f4f1]' : 'hover:text-[#0f766e] hover:bg-[#f0f9f7]'}`}>
+                <li>{label}</li>
+              </NavLink>
+            ))}
         </ul>
-        <div className='flex items-center gap-4'>
+        <div className='flex items-center gap-3'>
             <a className='hidden md:block border border-[#0f766e] rounded-full px-4 py-2 text-sm font-semibold text-[#0f766e] whitespace-nowrap hover:bg-[#e6f4f1] transition-colors' href='https://hospital-booking-app-jpza.vercel.app/' target='_blank' rel='noreferrer'>Admin / Doctor Login</a>
             {
                 token && userData ?
                 <div className='flex items-center gap-2 cursor-pointer group relative'>
-                    <img className='w-8 rounded-full' src={userData.image} alt="" />
+                    <img className='w-9 h-9 rounded-full object-cover ring-2 ring-[#dce7e2] group-hover:ring-[#0f766e] transition-all' src={userData.image} alt="" />
                     <img className='w-2.5' src={assets.dropdown_icon} alt="" />
-                    <div className='absolute top-0 right-0 pt-14 text-base font-medium text-gray-600 z-20 hidden group-hover:block'>
-                        <div className='min-w-48 bg-stone-100 rounded flex flex-col gap-4 p-4'>
-                            <p onClick={()=>navigate('/my-profile')} className='hover:text-black cursor-pointer' >My Profile</p>
-                            <p onClick={()=>navigate('/my-appointments')} className='hover:text-black cursor-pointer'>My Appointments</p>
-                            <p onClick={logout} className='hover:text-black cursor-pointer'>Logout</p>
+                    <div className='absolute top-0 right-0 pt-14 text-sm font-medium z-20 hidden group-hover:block'>
+                        <div className='min-w-52 bg-white rounded-2xl flex flex-col gap-1 p-3 shadow-xl shadow-[#183a34]/10 border border-[#dce7e2]'>
+                            <p onClick={()=>navigate('/my-profile')} className='px-4 py-2.5 rounded-xl hover:bg-[#f0f9f7] hover:text-[#0f766e] cursor-pointer transition-colors' >My Profile</p>
+                            <p onClick={()=>navigate('/my-appointments')} className='px-4 py-2.5 rounded-xl hover:bg-[#f0f9f7] hover:text-[#0f766e] cursor-pointer transition-colors'>My Appointments</p>
+                            <div className='border-t border-[#dce7e2] mt-1 pt-1'>
+                              <p onClick={logout} className='px-4 py-2.5 rounded-xl hover:bg-red-50 hover:text-red-500 cursor-pointer transition-colors'>Logout</p>
+                            </div>
                         </div>
                     </div>
                 </div>:
                 <button onClick={()=>navigate('/login')} className='primary-button hidden md:block'>Create Account</button>
             }
-            <img onClick={()=>setShowMenu(true)} className='w-6 md:hidden' src={assets.menu_icon} alt="" />
+            <img onClick={()=>setShowMenu(true)} className='w-6 md:hidden cursor-pointer' src={assets.menu_icon} alt="" />
             {/* Mobile menu  */}
             <div className={` ${showMenu? 'fixed w-full':'h-0 w-0'} md:hidden right-0 top-0 bottom-0 z-20 overflow-hidden bg-white transition-all`}>
-                <div className='flex items-center justify-between px-5 py-6'>
+                <div className='flex items-center justify-between px-5 py-6 border-b border-[#dce7e2]'>
                     <img className='w-36' src={assets.logo} alt="" />
-                    <img className='w-7' onClick={()=>setShowMenu(false)} src={assets.cross_icon} alt="" />
+                    <img className='w-7 cursor-pointer' onClick={()=>setShowMenu(false)} src={assets.cross_icon} alt="" />
                 </div>
-                <ul className='flex flex-col items-center gap-2 mt-5 px-5 text-lg font-medium'>
-                    <a onClick={()=>setShowMenu(false)} href='https://hospital-booking-app-jpza.vercel.app/' target='_blank' rel='noreferrer' className='border border-[#0f766e] px-4 py-2 mb-3 rounded-full text-[#0f766e]'>ADMIN / DOCTOR LOGIN ↗</a>
-                    <NavLink  onClick={()=>setShowMenu(false)} to={'/'}> <p className='px-4 py-2 rounded inline-block'>HOME</p></NavLink>
-                    <NavLink  onClick={()=>setShowMenu(false)} to={'/doctors'}> <p className='px-4 py-2 rounded inline-block'>ALL DOCTORS</p></NavLink>
-                    <NavLink  onClick={()=>setShowMenu(false)} to={'/about'}> <p className='px-4 py-2 rounded inline-block'>ABOUT</p></NavLink>
-                    <NavLink  onClick={()=>setShowMenu(false)} to={'/contact'}> <p className='px-4 py-2 rounded inline-block'>CONTACT</p></NavLink>
+                <ul className='flex flex-col items-stretch gap-1 mt-4 px-4 text-base font-medium'>
+                    <a onClick={()=>setShowMenu(false)} href='https://hospital-booking-app-jpza.vercel.app/' target='_blank' rel='noreferrer' className='flex items-center justify-center border border-[#0f766e] px-4 py-3 mb-2 rounded-full text-[#0f766e] text-sm font-semibold'>ADMIN / DOCTOR LOGIN ↗</a>
+                    {[['/', 'HOME'], ['/doctors', 'ALL DOCTORS'], ['/about', 'ABOUT'], ['/contact', 'CONTACT']].map(([path, label]) => (
+                      <NavLink key={path} onClick={()=>setShowMenu(false)} to={path}>
+                        <p className='px-4 py-3 rounded-xl transition-colors hover:bg-[#f0f9f7] hover:text-[#0f766e]'>{label}</p>
+                      </NavLink>
+                    ))}
                 </ul>
             </div>
             
@@ -76,4 +68,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Navbar

@@ -80,43 +80,75 @@ const Appointment = () => {
 
   return (
     <main className='page-frame'>
-      <div className='grid lg:grid-cols-[340px_1fr] gap-8 items-start'>
-        <section className='soft-surface rounded-3xl p-3'>
-          <img className='w-full aspect-[4/4.8] object-cover rounded-2xl' src={docInfo.image} alt={docInfo.name} />
-          <div className='p-4'>
-            <p className='eyebrow'>Verified clinician</p>
-            <h1 className='text-2xl font-semibold text-[#183a34] mt-3'>{docInfo.name}</h1>
+      <div className='grid lg:grid-cols-[320px_1fr] gap-8 items-start'>
+        {/* Doctor card */}
+        <section className='soft-surface p-3'>
+          <img className='w-full aspect-[4/4.8] object-cover rounded-xl' src={docInfo.image} alt={docInfo.name} />
+          <div className='p-5'>
+            <div className='flex items-center gap-1.5 text-xs font-semibold text-[#0f766e] bg-[#e6f4f1] w-fit px-3 py-1.5 rounded-full mb-3'>
+              <span className='w-1.5 h-1.5 bg-[#0f766e] rounded-full animate-pulse'></span>
+              Verified clinician
+            </div>
+            <h1 className='text-2xl font-semibold text-[#183a34] leading-tight'>{docInfo.name}</h1>
             <p className='text-gray-500 mt-1'>{docInfo.speciality}</p>
-            <p className='text-sm text-gray-400 mt-4'>{docInfo.degree} · {docInfo.experience}</p>
+            <p className='text-sm text-gray-400 mt-3 border-t border-[#e8efec] pt-3'>{docInfo.degree} · {docInfo.experience}</p>
           </div>
         </section>
 
+        {/* Booking section */}
         <section>
           <p className='eyebrow'>Book a visit</p>
-          <h2 className='text-3xl font-semibold text-[#183a34] mt-3'>A good next step starts here.</h2>
+          <h2 className='text-3xl font-semibold text-[#183a34] mt-3 tracking-[-0.03em]'>A good next step starts here.</h2>
           <p className='text-gray-500 leading-7 mt-4 max-w-2xl'>{docInfo.about}</p>
+
           <div className='flex flex-wrap gap-3 mt-6'>
-            <span className='bg-[#e6f4f1] text-[#0f766e] rounded-full px-4 py-2 text-sm font-semibold'>${docInfo.fees} consultation</span>
-            <span className='bg-white border border-[#dce7e2] text-gray-500 rounded-full px-4 py-2 text-sm'>In-person visit</span>
+            <span className='bg-[#e6f4f1] text-[#0f766e] rounded-full px-5 py-2 text-sm font-semibold'>${docInfo.fees} consultation</span>
+            <span className='bg-white border border-[#dce7e2] text-gray-500 rounded-full px-5 py-2 text-sm'>In-person visit</span>
           </div>
 
-          <div className='soft-surface rounded-2xl p-5 mt-10'>
-            <p className='font-semibold text-[#183a34]'>Choose a day</p>
-            <div className='flex gap-2 overflow-x-auto mt-4 pb-2'>
+          {/* Slot picker */}
+          <div className='soft-surface p-6 mt-10'>
+            <p className='font-semibold text-[#183a34] text-base mb-4'>Choose a day</p>
+            <div className='flex gap-2.5 overflow-x-auto pb-2'>
               {docSlots.map((day, index) => (
-                <button key={day[0]?.datetime.toISOString() || index} onClick={() => { setSlotIndex(index); setSlotTime('') }} className={`min-w-16 rounded-xl py-3 text-sm ${slotIndex === index ? 'bg-[#0f766e] text-white' : 'bg-[#f4f7f5] text-gray-500'}`}>
-                  <b>{day[0] && days[day[0].datetime.getDay()]}</b><br />{day[0] && day[0].datetime.getDate()}
+                <button
+                  key={day[0]?.datetime.toISOString() || index}
+                  onClick={() => { setSlotIndex(index); setSlotTime('') }}
+                  className={`min-w-[58px] rounded-2xl py-3.5 text-sm font-semibold transition-all ${
+                    slotIndex === index
+                      ? 'bg-[#0f766e] text-white shadow-md shadow-[#0f766e]/20'
+                      : 'bg-[#f4f7f5] text-gray-500 hover:bg-[#e6f4f1] hover:text-[#0f766e]'
+                  }`}
+                >
+                  <span className='block text-xs mb-0.5'>{day[0] && days[day[0].datetime.getDay()]}</span>
+                  <span className='block text-base font-bold'>{day[0] && day[0].datetime.getDate()}</span>
                 </button>
               ))}
             </div>
-            <p className='font-semibold text-[#183a34] mt-6'>Choose a time</p>
-            <div className='flex flex-wrap gap-2 mt-4'>
+
+            <p className='font-semibold text-[#183a34] text-base mt-7 mb-4'>Choose a time</p>
+            <div className='flex flex-wrap gap-2.5'>
               {docSlots[slotIndex]?.map((slot) => (
-                <button key={slot.time} onClick={() => setSlotTime(slot.time)} className={`rounded-full px-4 py-2 text-sm ${slotTime === slot.time ? 'bg-[#0f766e] text-white' : 'border border-[#dce7e2] text-gray-500'}`}>{slot.time.toLowerCase()}</button>
+                <button
+                  key={slot.time}
+                  onClick={() => setSlotTime(slot.time)}
+                  className={`rounded-full px-5 py-2 text-sm font-semibold transition-all ${
+                    slotTime === slot.time
+                      ? 'bg-[#0f766e] text-white shadow-sm'
+                      : 'border border-[#dce7e2] text-gray-500 hover:border-[#0f766e] hover:text-[#0f766e]'
+                  }`}
+                >
+                  {slot.time.toLowerCase()}
+                </button>
               ))}
             </div>
-            <button className='primary-button mt-8 disabled:opacity-50 disabled:cursor-not-allowed' disabled={isBooking} onClick={confirmAppointment}>
-              {isBooking ? 'Confirming...' : 'Confirm appointment'}
+
+            <button
+              className='primary-button mt-8 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none'
+              disabled={isBooking}
+              onClick={confirmAppointment}
+            >
+              {isBooking ? 'Confirming…' : 'Confirm appointment'}
             </button>
           </div>
         </section>

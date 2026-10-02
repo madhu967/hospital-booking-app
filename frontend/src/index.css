@@ -41,40 +41,55 @@ h1, h2, h3, button, input, textarea, select {
   text-transform: uppercase;
 }
 
+/* === Upgraded soft-surface: crisper, deeper shadow === */
 .soft-surface {
-  background: rgba(255, 255, 255, .82);
+  background: rgba(255, 255, 255, .95);
   border: 1px solid #dfeae5;
-  box-shadow: 0 18px 44px rgba(24, 58, 52, .07);
+  box-shadow: 0 4px 6px -1px rgba(24, 58, 52, .04), 0 20px 48px -8px rgba(24, 58, 52, .10);
+  border-radius: 20px;
 }
 
+/* === Upgraded input: cleaner pill shape, smooth focus ring === */
 .input-field {
   width: 100%;
-  border: 1px solid #d6e2dd;
+  border: 1.5px solid #d6e2dd;
   border-radius: 12px;
   background: #fbfdfc;
-  padding: .6rem .8rem;
+  padding: .72rem .95rem;
   outline: none;
-  transition: border-color .2s ease, box-shadow .2s ease;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 .input-field:focus {
   border-color: #0f766e;
-  box-shadow: 0 0 0 4px rgba(15, 118, 110, .1);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, .12);
+  background: #ffffff;
 }
 
+/* === Upgraded button: tighter font, smooth lift === */
 .primary-button {
   background: #0f766e;
   color: white;
   border-radius: 999px;
   font-weight: 700;
-  padding: .75rem 1.2rem;
-  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+  font-family: inherit;
+  padding: .72rem 1.4rem;
+  border: none;
+  cursor: pointer;
+  transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
 }
 
 .primary-button:hover {
   background: #0b5f59;
-  box-shadow: 0 10px 24px rgba(15, 118, 110, .2);
+  box-shadow: 0 8px 24px rgba(15, 118, 110, .28);
   transform: translateY(-2px);
+}
+
+.primary-button:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 @media (max-width: 640px) {
@@ -82,10 +97,13 @@ h1, h2, h3, button, input, textarea, select {
   .page-frame { padding-top: 16px; }
 }
 
+/* === Upgraded hero: subtle dot pattern, rounded corners === */
 .hero-panel {
   background: #0f766e;
   position: relative;
   isolation: isolate;
+  border-radius: 24px;
+  overflow: hidden;
 }
 
 .hero-panel::before {
@@ -93,79 +111,102 @@ h1, h2, h3, button, input, textarea, select {
   position: absolute;
   inset: 0;
   z-index: -1;
-  opacity: .18;
-  background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: linear-gradient(90deg, black, transparent 78%);
+  opacity: .14;
+  background-image: radial-gradient(rgba(255,255,255,.8) 1.5px, transparent 1.5px);
+  background-size: 32px 32px;
+}
+
+.hero-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, rgba(255,255,255,.05) 0%, transparent 60%);
 }
 
 .hero-copy {
-  animation: rise-in .7s ease-out both;
+  animation: rise-in .65s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero-image {
-  animation: rise-in .7s .12s ease-out both;
+  animation: rise-in .65s .1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .section-intro {
   max-width: 560px;
 }
 
+/* === Upgraded specialty tile: glass shimmer on hover === */
 .speciality-tile {
-  background: #fffdf8;
-  border: 1px solid #e7e3d8;
-  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  background: #ffffff;
+  border: 1px solid #e5ede9;
+  border-radius: 18px;
+  transition: transform .26s cubic-bezier(0.34, 1.56, 0.64, 1), border-color .2s ease, box-shadow .26s ease;
 }
 
 .speciality-tile:hover {
   border-color: #0f766e;
-  box-shadow: 0 14px 30px rgba(15, 118, 110, .12);
-  transform: translateY(-6px);
+  box-shadow: 0 16px 36px -8px rgba(15, 118, 110, .18);
+  transform: translateY(-8px) scale(1.02);
 }
 
+/* === Upgraded doctor card: overflow clip, smooth spring === */
 .doctor-card {
   background: #ffffff;
-  border: 1px solid #e7e3d8;
-  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  border: 1px solid #e5ede9;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform .26s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .26s ease, border-color .2s ease;
 }
 
 .doctor-card:hover {
   border-color: #b7ded9;
-  box-shadow: 0 16px 32px rgba(15, 118, 110, .12);
-  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -10px rgba(15, 118, 110, .18);
+  transform: translateY(-8px);
 }
 
+/* === Upgraded CTA banner: layered glows === */
 .landing-cta {
   background: #0f766e;
   position: relative;
   overflow: hidden;
+  border-radius: 24px;
+}
+
+.landing-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.08) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .landing-cta::after {
   content: '';
   position: absolute;
-  width: 280px;
-  height: 280px;
-  right: 18%;
-  top: -150px;
-  border: 1px solid rgba(255,255,255,.24);
+  width: 320px;
+  height: 320px;
+  right: 12%;
+  top: -160px;
+  border: 1.5px solid rgba(255,255,255,.18);
   border-radius: 50%;
 }
 
 @keyframes rise-in {
-  from { opacity: 0; transform: translateY(18px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.active hr{
-  /* display: block; */
-  @apply block
+.active hr {
+  @apply block border-t-2 border-[#0f766e] mt-0.5
 }
-::-webkit-scrollbar{
+
+::-webkit-scrollbar {
   @apply hidden
 }
-@media (max-width:740px){
-  .active p{
-    @apply text-white bg-[#0f766e]
+
+@media (max-width:740px) {
+  .active p {
+    @apply text-white bg-[#0f766e] rounded-full
   }
 }

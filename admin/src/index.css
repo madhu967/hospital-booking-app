@@ -8,12 +8,20 @@
 }
 
 body { margin: 0; background: #f4f7f5; }
-button, input { font-family: inherit; }
+button, input, select, textarea { font-family: inherit; }
 
+/* === Upgraded admin card: deeper shadow, spring on hover === */
 .admin-card {
-  background: rgba(255, 255, 255, .9);
+  background: rgba(255, 255, 255, .96);
   border: 1px solid #dfeae5;
-  box-shadow: 0 14px 34px rgba(24, 58, 52, .06);
+  box-shadow: 0 1px 3px rgba(24, 58, 52, .05), 0 12px 32px -6px rgba(24, 58, 52, .09);
+  border-radius: 16px;
+  transition: box-shadow .22s ease, border-color .22s ease;
+}
+
+.admin-card:hover {
+  border-color: #c9dfd9;
+  box-shadow: 0 4px 6px rgba(24, 58, 52, .05), 0 20px 48px -8px rgba(24, 58, 52, .13);
 }
 
 .admin-eyebrow {
@@ -24,6 +32,6 @@ button, input { font-family: inherit; }
   text-transform: uppercase;
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   @apply hidden
 }

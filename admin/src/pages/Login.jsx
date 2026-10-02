@@ -8,11 +8,11 @@ import { toast } from 'react-toastify';
 
 const Login = () => {
 
-    const [state,setState]=useState('Admin');
+    const [state, setState] = useState('Admin');
     
-    const {setAToken,backendUrl}=useContext(AdminContext);
-    const [email,setEmail]=useState('admin@prescripto.com');
-    const [password,setPassword]=useState('admin123');
+    const {setAToken, backendUrl} = useContext(AdminContext);
+    const [email, setEmail] = useState('admin@prescripto.com');
+    const [password, setPassword] = useState('admin123');
 
     const useDemoLogin = (type) => {
         setState(type)
@@ -36,29 +36,25 @@ const Login = () => {
         } catch (error) { toast.error(error.response?.data?.message || error.message) }
     }
 
-    const onSubmitHandler =async (event)=>{
+    const onSubmitHandler = async (event) => {
         event.preventDefault();
         try {
             if(state === 'Admin'){
-                const {data} =await axios.post(backendUrl + '/api/admin/login' , {email,password});
+                const {data} = await axios.post(backendUrl + '/api/admin/login', {email, password});
                 if(data.success){
-                    localStorage.setItem('atoken',data.token)
-                    localStorage.setItem('role','Admin')
+                    localStorage.setItem('atoken', data.token)
+                    localStorage.setItem('role', 'Admin')
                     setAToken(data.token);
-
-                }
-                else{
+                } else {
                     toast.error(data.message)
                 }
-            }
-            else{
-                const {data} =await axios.post(backendUrl + '/api/doctor/login' , {email,password});
+            } else {
+                const {data} = await axios.post(backendUrl + '/api/doctor/login', {email, password});
                 if(data.success){
-                    localStorage.setItem('atoken',data.token)
-                    localStorage.setItem('role','Doctor')
+                    localStorage.setItem('atoken', data.token)
+                    localStorage.setItem('role', 'Doctor')
                     setAToken(data.token)
-                }
-                else{
+                } else {
                     toast.error(data.message)
                 }
             }
@@ -67,31 +63,69 @@ const Login = () => {
         }
     }
 
-    
-    
   return (
-    <form onSubmit={onSubmitHandler} className='min-h-screen bg-[#f4f7f5] flex items-center px-4'>
-       <div className='admin-card flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 rounded-2xl text-gray-600 text-sm'>
-        <p className='admin-eyebrow m-auto'>{state} access</p>
-        <h1 className='text-3xl font-semibold text-[#183a34] m-auto'>Welcome back</h1>
-        <div className='grid grid-cols-2 gap-2 w-full mt-2'>
-            <button type='button' onClick={()=>useDemoLogin('Admin')} className={`rounded-xl py-2.5 text-sm font-semibold ${state === 'Admin' ? 'bg-[#0f766e] text-white' : 'border border-[#b7ded9] text-[#0f766e]'}`}>Admin Login</button>
-            <button type='button' onClick={()=>useDemoLogin('Doctor')} className={`rounded-xl py-2.5 text-sm font-semibold ${state === 'Doctor' ? 'bg-[#0f766e] text-white' : 'border border-[#b7ded9] text-[#0f766e]'}`}>Doctor Login</button>
+    <form onSubmit={onSubmitHandler} className='min-h-screen bg-[#f4f7f5] flex items-center justify-center px-4'>
+       <div className='admin-card flex flex-col gap-5 items-start p-8 w-full max-w-sm text-sm'>
+        
+        {/* Header */}
+        <div className='w-full text-center'>
+          <p className='admin-eyebrow mb-1'>{state} Access</p>
+          <h1 className='text-3xl font-semibold text-[#183a34]'>Welcome back</h1>
+          <p className='text-gray-500 text-sm mt-1'>Sign in to your portal</p>
         </div>
-        <div className='w-full rounded-xl bg-[#e6f4f1] p-3 text-sm text-[#0f766e]'>
+
+        {/* Role Toggle */}
+        <div className='grid grid-cols-2 gap-2 w-full p-1 bg-[#f4f7f5] rounded-xl'>
+            <button
+              type='button'
+              onClick={() => useDemoLogin('Admin')}
+              className={`rounded-lg py-2.5 text-sm font-semibold transition-all ${state === 'Admin' ? 'bg-[#0f766e] text-white shadow-sm' : 'text-[#52615d] hover:text-[#0f766e]'}`}
+            >
+              Admin
+            </button>
+            <button
+              type='button'
+              onClick={() => useDemoLogin('Doctor')}
+              className={`rounded-lg py-2.5 text-sm font-semibold transition-all ${state === 'Doctor' ? 'bg-[#0f766e] text-white shadow-sm' : 'text-[#52615d] hover:text-[#0f766e]'}`}
+            >
+              Doctor
+            </button>
+        </div>
+
+        {/* Demo Credentials */}
+        <div className='w-full rounded-xl bg-[#e6f4f1] border border-[#c8e6e0] p-4 text-sm text-[#0f766e]'>
             <p className='font-semibold'>Demo credentials</p>
-            <p>{state === 'Admin' ? 'admin@prescripto.com / admin123' : 'bulk-doctor-2026-01@prescripto.com / Doctor@2026'}</p>
-            <button type='button' onClick={() => loginDemo(state)} className='underline font-semibold mt-1'>Login with demo account</button>
+            <p className='mt-1 text-[#0f766e]/80'>{state === 'Admin' ? 'admin@prescripto.com / admin123' : 'bulk-doctor-2026-01@prescripto.com / Doctor@2026'}</p>
+            <button type='button' onClick={() => loginDemo(state)} className='underline font-semibold mt-2 hover:text-[#0b5f59] transition-colors'>Login with demo account →</button>
         </div>
+
+        {/* Email */}
         <div className='w-full'>
-            <p>Email</p>
-            <input onChange={(e)=>setEmail(e.target.value)} value={email} className='w-full border border-[#d6e2dd] rounded-xl bg-[#fbfdfc] p-3 mt-1 outline-none focus:border-[#0f766e]' type="email" required />
+            <p className='font-semibold text-[#183a34] mb-1.5'>Email</p>
+            <input
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              className='w-full border-1.5 border-[#d6e2dd] rounded-xl bg-[#fbfdfc] p-3 outline-none focus:border-[#0f766e] focus:shadow-[0_0_0_3px_rgba(15,118,110,0.12)] transition-all'
+              type="email"
+              required
+            />
         </div>
+
+        {/* Password */}
         <div className='w-full'>
-            <p>Password</p>
-            <input onChange={(e)=>setPassword(e.target.value)} value={password} className='w-full border border-[#d6e2dd] rounded-xl bg-[#fbfdfc] p-3 mt-1 outline-none focus:border-[#0f766e]' type="password" required />
+            <p className='font-semibold text-[#183a34] mb-1.5'>Password</p>
+            <input
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              className='w-full border-1.5 border-[#d6e2dd] rounded-xl bg-[#fbfdfc] p-3 outline-none focus:border-[#0f766e] focus:shadow-[0_0_0_3px_rgba(15,118,110,0.12)] transition-all'
+              type="password"
+              required
+            />
         </div>
-        <button className='bg-[#0f766e] text-white w-full py-3 rounded-full text-base font-semibold'>Login</button>
+
+        <button className='bg-[#0f766e] text-white w-full py-3.5 rounded-full text-base font-semibold hover:bg-[#0b5f59] hover:shadow-md transition-all'>
+          Sign in
+        </button>
        </div>
     </form>
   )
