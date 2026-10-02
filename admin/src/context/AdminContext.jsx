@@ -10,7 +10,7 @@ const AdminContextProvider = (props) => {
     localStorage.getItem("atoken") ? localStorage.getItem("atoken") : ""
   );
   const [role, setRole] = useState(localStorage.getItem("role") || "Admin");
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = (import.meta.env.VITE_BACKEND_URL || '').replace(/\/+$/, '');
   const [doctors, setDoctors] = useState([]);
   const [dashboard, setDashboard] = useState({ stats: {}, recentAppointments: [] });
   const [appointments, setAppointments] = useState([]);
