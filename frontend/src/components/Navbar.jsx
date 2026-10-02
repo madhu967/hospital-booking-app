@@ -18,24 +18,24 @@ const Navbar = () => {
     
 
   return (
-    <div className='flex item-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400'>
+    <div className='flex items-center justify-between text-sm py-5 mb-2 border-b border-b-[#dce7e2]'>
         <img onClick={()=>navigate('/')} className='w-44 cursor-pointer' src={assets.logo} alt="" />
-        <ul className='hidden md:flex items-start gap-5 font-medium'>
+        <ul className='hidden md:flex items-center gap-7 font-semibold text-[#52615d]'>
             <NavLink to='/'>
                 <li className='py-1'>HOME</li>
-                <hr className='border-none outline-none h-0.5 bg-[#3f51f8] w-3/5 m-auto hidden' />
+                <hr className='border-none outline-none h-0.5 bg-[#0f766e] w-3/5 m-auto hidden' />
             </NavLink>
             <NavLink to='/doctors'>
-                <li className='py-1'>ALL DOCTERS</li>
-                <hr className='border-none outline-none h-0.5 bg-[#3f51f8] w-3/5 m-auto hidden' />
+                <li className='py-1'>DOCTORS</li>
+                <hr className='border-none outline-none h-0.5 bg-[#0f766e] w-3/5 m-auto hidden' />
             </NavLink>
             <NavLink to='/about'>
-                <li className='py-1'>ABOUT</li>
-                <hr className='border-none outline-none h-0.5 bg-[#3f51f8] w-3/5 m-auto hidden' />
+                <li className='py-1'>OUR STORY</li>
+                <hr className='border-none outline-none h-0.5 bg-[#0f766e] w-3/5 m-auto hidden' />
             </NavLink>
             <NavLink to='/contact'>
                 <li className='py-1'>CONTACT</li>
-                <hr className='border-none outline-none h-0.5 bg-[#3f51f8] w-3/5 m-auto hidden' />
+                <hr className='border-none outline-none h-0.5 bg-[#0f766e] w-3/5 m-auto hidden' />
             </NavLink>
         </ul>
         <div className='flex items-center gap-4'>
@@ -52,7 +52,7 @@ const Navbar = () => {
                         </div>
                     </div>
                 </div>:
-                <button onClick={()=>navigate('/login')} className='bg-[#5f6FFF] text-white px-8 py-3 rounded-full font-light hidden md:block'>Create Account</button>
+                <button onClick={()=>navigate('/login')} className='primary-button hidden md:block'>Create Account</button>
             }
             <img onClick={()=>setShowMenu(true)} className='w-6 md:hidden' src={assets.menu_icon} alt="" />
             {/* Mobile menu  */}

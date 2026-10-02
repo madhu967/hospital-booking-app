@@ -1,44 +1,17 @@
 import React from 'react'
 import { assets } from '../assets/assets'
 
-const About = () => {
-  return (
-    <div>
-        <div className='text-center text-xl pt-10 text-gray-500'>
-          <p>ABOUT <span className='text-gray-700 font-medium'>US</span></p>
-        </div>
-        <div className='my-10 flex flex-col md:flex-row gap-12'>
-          <img className='w-full md:max-w-[360px]' src={assets.about_image} alt="" />
-          <div className='flex flex-col justify-center gap-6 md:w-1/2 text-sm text-gray-600'>
-            <p>Welcome to Prescripto, your trusted partner in managing your healthcare needs conveniently and efficiently. At Prescripto, we understand the challenges individuals face when it comes to scheduling 
-              doctor appointments and managing their health records.</p>
-            <p>Prescripto is committed to excellence in healthcare technology. We continuously strive to enhance our platform, integrating the latest advancements to improve user experience and deliver superior service. Whether you're booking your first appointment or managing ongoing care, 
-              Prescripto is here to support you every step of the way</p>
-            <b className='text-gray-800'>Our Vision</b>
-            <p>Our vision at Prescripto is to create a seamless healthcare experience for every user. We aim to bridge the gap between patients and healthcare providers, making it easier
-               for you to access the care you need, when you need it.</p>
-          </div>
-        </div>
-        <div className='text-xl my-4'>
-          <p>WHY <span className='text-gray-700 font-semibold'>CHOOSE US</span> </p>
-        </div>
-        <div className='flex flex-col md:flex-row mb-20'>
-             <div className='border px-10 md:px-16 py-8 sm:py-16 flex flex-col gap-5 text-[15px] hover:bg-[#5f6FFF] hover:text-white transition-all duration-300 text-gray-600'> 
-               <b>Efficiency</b>
-               <p>Streamlined appointment scheduling that fits into your busy lifestyle.</p>
-             </div>
-             <div className='border px-10 md:px-16 py-8 sm:py-16 flex flex-col gap-5 text-[15px] hover:bg-[#5f6FFF] hover:text-white transition-all duration-300 text-gray-600'>
-               <b>Convienence</b>
-               <p>Access to a network of trusted healthcare professionals in your area.</p>
-             </div>
-             <div className='border px-10 md:px-16 py-8 sm:py-16 flex flex-col gap-5 text-[15px] hover:bg-[#5f6FFF] hover:text-white transition-all duration-300 text-gray-600'>
-               <b>Personalization</b>
-               <p>Tailored recommendations and reminders to help you stay on top of your health.</p>
-             </div>
-        </div>
-      
-    </div>
-  )
-}
+const About = () => (
+  <main className='page-frame'>
+    <section className='grid md:grid-cols-[.9fr_1.1fr] gap-10 items-center mb-20'>
+      <div><p className='eyebrow'>Our story</p><h1 className='text-5xl font-semibold tracking-[-.06em] text-[#183a34] mt-4'>Healthcare should feel less complicated.</h1></div>
+      <p className='text-lg leading-8 text-gray-500'>Prescripto brings trusted doctors and thoughtful digital tools into one calm place. We are here to make finding care feel clear, personal, and genuinely easy.</p>
+    </section>
+    <section className='grid md:grid-cols-2 gap-10 items-center'>
+      <img className='w-full rounded-[28px] object-cover' src={assets.about_image} alt='A caring healthcare experience' />
+      <div className='space-y-6 text-gray-600 leading-7'><p>From the first search to the moment you book, every part of Prescripto is designed around confidence and clarity.</p><p>Our vision is simple: make it easier to access the right care, at the right time, with the right person.</p><div className='grid grid-cols-2 gap-4 pt-4'><div className='soft-surface rounded-2xl p-5'><b className='text-2xl text-[#183a34]'>50+</b><p className='text-sm mt-1'>trusted clinicians</p></div><div className='soft-surface rounded-2xl p-5'><b className='text-2xl text-[#183a34]'>6</b><p className='text-sm mt-1'>care specialties</p></div></div></div>
+    </section>
+  </main>
+)
 
 export default About

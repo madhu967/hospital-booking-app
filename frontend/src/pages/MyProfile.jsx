@@ -1,137 +1,18 @@
 import React, { useContext, useState } from 'react'
 import axios from 'axios'
 import { AppContext } from '../context/AppContext'
-import {assets} from '../assets/assets'
+import { assets } from '../assets/assets'
 import { toast } from 'react-toastify'
 
 const MyProfile = () => {
-
-  // const [userData,setUserData]=useState({
-  //   name:"Edward Vincent",
-  //   image:assets.profile_pic,
-  //   email:"richardjameswap@gmail.com",
-  //   phone:'+1 123-456-7890',
-  //   address:{
-  //     line1:"57th Croess Richmond",
-  //     line2:"Circle,Church Road,Londo"
-  //   },
-  //   gender:"Male",
-  //   dob:'2000-01-20'
-  // })
-
-  const {userData,setUserData,token,backendUrl,loadUserProfileData} =useContext(AppContext)
-
-  const [isEdit,setIsEdit]=useState(false);
-
-  const [image,setImage]=useState(false);
-
-  const updateUserProfileData=async ()=>{
-      try {
-        
-        const formData =new FormData();
-        formData.append('name',userData.name);
-        formData.append('phone',userData.phone);
-        formData.append('address',JSON.stringify(userData.address));
-        formData.append('gender',userData.gender);
-        formData.append('dob',userData.dob);
-        
-        image && formData.append('image',image);
-
-        const {data}= await axios.post(backendUrl + '/api/user/update-profile',formData,{headers:{token}})
-        if(data.success){
-          toast.success(data.message);
-          await loadUserProfileData();
-          setIsEdit(false);
-          setImage(false);
-        }
-        else{
-          toast.error(data.message)
-        }
-
-      } catch (error) {
-        console.log(error)
-        toast.error(error.message);
-      }
+  const { userData, setUserData, token, backendUrl, loadUserProfileData } = useContext(AppContext)
+  const [isEdit, setIsEdit] = useState(false)
+  const [image, setImage] = useState(false)
+  if (!userData) return null
+  const updateProfile = async () => {
+    try { const formData = new FormData(); formData.append('name', userData.name); formData.append('phone', userData.phone); formData.append('address', JSON.stringify(userData.address)); formData.append('gender', userData.gender); formData.append('dob', userData.dob); if (image) formData.append('image', image); const { data } = await axios.post(backendUrl + '/api/user/update-profile', formData, { headers: { token } }); if (!data.success) return toast.error(data.message); await loadUserProfileData(); setIsEdit(false); setImage(false); toast.success(data.message) } catch (error) { toast.error(error.message) }
   }
-  return userData && (
-    <div className='max-w-lg gap-2 text-sm flex flex-col'>
-
-      {
-        isEdit
-        ? <label htmlFor="image">
-             <div className='inline-block relative cursor-pointer'>
-              <img className='w-36 rounded opacity-75' src={image ? URL.createObjectURL(image):userData.image} alt="" />
-              <img className='w-10 absolute bottom-12 right-12' src={image ? '': assets.upload_icon} alt="" />
-             </div>
-             <input onChange={(e)=>setImage(e.target.files[0])} type="file" id="image" hidden />
-        </label>
-        :<img className='w-36 rounded ' src={userData.image} alt="" />
-      }
-        
-        {
-          isEdit
-          ? <input className='bg-gray-50 text-3xl font-medium max-w-60 mt-4' value={userData.name} onChange={e=>setUserData(prev =>({...prev,name:e.target.value}))} type="text" />
-          :<p className='font-medium text-3xl text-neutral-800 mt-4'>{userData.name}</p>
-        }
-        <hr className='bg-zinc-400 h-[1px] border-none' />
-        <div>
-          <p className='text-neutral-500 underline mt-3' >CONTACT INFORMATION</p>
-          <div className='grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-neutral-700'>
-            <p className='font-medium'>Email id:</p>
-            <p className='text-blue-500'>{userData.email}</p>
-            <p className='font-medium'>Phone:</p>
-            {
-              isEdit
-              ? <input className='bg-gray-100 max-w-52' value={userData.phone} onChange={e=>setUserData(prev =>({...prev,phone:e.target.value}))} type="text" />
-              :<p className='text-blue-400'>{userData.phone}</p>
-            }
-            <p className='font-medium'>Address:</p>
-            {
-              isEdit
-              ? <p>
-                <input className='bg-gray-50' onChange={(e)=>setUserData(prev=>({...prev,address: {...prev.address,line1:e.target.value}}))} value={userData.address.line1} type="text" />
-                <br />
-                <input className='bg-gray-50' onChange={(e)=>setUserData(prev=>({...prev,address: {...prev.address,line2:e.target.value}}))} value={userData.address.line2} type="text" />
-              </p>
-              :<p className='text-gray-500'>
-                {
-                  userData.address.line1
-                }
-                <br />
-                {userData.address.line2}
-              </p>
-            }
-          </div>
-        </div>
-        <div>
-          <p className='text-neutral-500 underline mt-3'>Basic Information</p>
-          <div className='grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-neutral-700'>
-            <p className='font-medium '>Gender:</p>
-            {
-              isEdit
-              ? <select className='max-w-20 bg-gray-100' onChange={(e)=>setUserData(prev=>({...prev,gender: e.target.value}))} value={userData.gender} >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-              :<p className='text-gray-400'>{userData.gender}</p>
-            }
-            <p className='font-medium '>Birthday:</p>
-            {
-              isEdit?
-              <input className='max-w-28 bg-gray-100' type='date' onChange={(e)=>setUserData(prev=>({...prev,dob: e.target.value}))} value={userData.dob}></input>
-              :<p className='text-gray-400'>{userData.dob}</p>
-            }
-          </div>
-        </div>
-        <div className='mt-10'>
-          {
-            isEdit
-            ? <button className='border border-[#5f6FFF]  px-8 py-2 rounded-full hover:bg-[#5f6FFF] hover:text-white  transition-all'  onClick={updateUserProfileData}>Save Information</button>
-            : <button className='border border-[#5f6FFF] px-8 py-2 rounded-full hover:bg-[#5f6FFF] hover:text-white transition-all' onClick={()=>setIsEdit(true)}>Edit</button>
-          }
-        </div>
-    </div>
-  )
+  return <main className='page-frame max-w-3xl'><div className='mb-10'><p className='eyebrow'>Your profile</p><h1 className='text-4xl font-semibold tracking-[-.05em] text-[#183a34] mt-3'>A little about you</h1></div><section className='soft-surface rounded-3xl p-6 sm:p-8'><label className='block w-28 cursor-pointer'>{isEdit ? <img className='w-28 h-28 object-cover rounded-2xl opacity-80' src={image ? URL.createObjectURL(image) : userData.image} alt='' /> : <img className='w-28 h-28 object-cover rounded-2xl' src={userData.image} alt='' />}{isEdit && <input className='hidden' type='file' onChange={(event) => setImage(event.target.files[0])} />}</label>{isEdit ? <input className='input-field text-2xl font-semibold mt-5 max-w-sm' value={userData.name} onChange={(event) => setUserData((prev) => ({ ...prev, name: event.target.value }))} /> : <h2 className='text-3xl font-semibold text-[#183a34] mt-5'>{userData.name}</h2>}<div className='grid sm:grid-cols-2 gap-8 border-t border-[#dce7e2] mt-8 pt-8'><div><p className='eyebrow'>Contact</p><p className='font-semibold mt-3'>Email</p><p className='text-gray-500 mt-1'>{userData.email}</p><p className='font-semibold mt-4'>Phone</p>{isEdit ? <input className='input-field mt-1' value={userData.phone} onChange={(event) => setUserData((prev) => ({ ...prev, phone: event.target.value }))} /> : <p className='text-gray-500 mt-1'>{userData.phone}</p>}</div><div><p className='eyebrow'>Details</p><p className='font-semibold mt-3'>Address</p>{isEdit ? <textarea className='input-field mt-1' value={userData.address.line1} onChange={(event) => setUserData((prev) => ({ ...prev, address: { ...prev.address, line1: event.target.value } }))} /> : <p className='text-gray-500 mt-1'>{userData.address.line1}<br />{userData.address.line2}</p>}<p className='font-semibold mt-4'>Birthday</p><p className='text-gray-500 mt-1'>{userData.dob}</p></div></div><div className='mt-8'>{isEdit ? <button className='primary-button' onClick={updateProfile}>Save changes</button> : <button className='primary-button' onClick={() => setIsEdit(true)}>Edit profile</button>}</div></section></main>
 }
 
 export default MyProfile

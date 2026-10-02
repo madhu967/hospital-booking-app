@@ -15,6 +15,12 @@ import info_icon from './info_icon.svg'
 import upload_icon from './upload_icon.png'
 import stripe_logo from './stripe_logo.png'
 import razorpay_logo from './razorpay_logo.png'
+import doc1 from './doc1.png'
+import doc2 from './doc2.png'
+import doc3 from './doc3.png'
+import doc4 from './doc4.png'
+import doc5 from './doc5.png'
+import doc6 from './doc6.png'
 import Dermatologist from './Dermatologist.svg'
 import Gastroenterologist from './Gastroenterologist.svg'
 import General_physician from './General_physician.svg'
@@ -45,26 +51,26 @@ export const assets = {
 export const specialityData = [
     {
         speciality: 'General physician',
-        image: General_physician
+        image: doc1
     },
     {
         speciality: 'Gynecologist',
-        image: Gynecologist
+        image: doc2
     },
     {
         speciality: 'Dermatologist',
-        image: Dermatologist
+        image: doc3
     },
     {
         speciality: 'Pediatricians',
-        image: Pediatricians
+        image: doc4
     },
     {
         speciality: 'Neurologist',
-        image: Neurologist
+        image: doc5
     },
     {
         speciality: 'Gastroenterologist',
-        image: Gastroenterologist
+        image: doc6
     },
 ]
