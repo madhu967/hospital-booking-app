@@ -53,8 +53,16 @@ const registerUser =async (req,res)=>{
 const loginUser =async (req,res)=>{
 
     try {
-        const {email,password}=req.body;
-        const user=await userModel.findOne({email})
+    const email = req.body.email?.trim().toLowerCase();
+    const {password}=req.body;
+    const demoEmail = process.env.DEMO_USER_EMAIL || 'demo@prescripto.com';
+    const demoPassword = process.env.DEMO_USER_PASSWORD || 'Demo@12345';
+    let user=await userModel.findOne({email})
+
+    if (!user && email === demoEmail && password === demoPassword) {
+      const hashedPassword = await bcrypt.hash(demoPassword, 10);
+      user = await userModel.create({ name: 'Demo Patient', email: demoEmail, password: hashedPassword });
+    }
         if(!user){
             return res.json({success:false,message:'User Not Found'})
         }

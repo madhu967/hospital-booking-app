@@ -19,6 +19,9 @@ const Header = () => {
                 Book Appointment
                 <img className='w-3' src={assets.arrow_icon} alt="" />
             </a>
+            <a className='text-sm text-white/85 underline underline-offset-4 hover:text-white transition-colors' href='https://hospital-booking-app-jpza.vercel.app/' target='_blank' rel='noreferrer'>
+                Admin &amp; Doctor Portal ↗
+            </a>
 
         </div>
         {/* right side  */}

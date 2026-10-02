@@ -39,6 +39,7 @@ const Navbar = () => {
             </NavLink>
         </ul>
         <div className='flex items-center gap-4'>
+            <a className='hidden md:block border border-[#0f766e] rounded-full px-4 py-2 text-sm font-semibold text-[#0f766e] whitespace-nowrap hover:bg-[#e6f4f1] transition-colors' href='https://hospital-booking-app-jpza.vercel.app/' target='_blank' rel='noreferrer'>Admin / Doctor Login</a>
             {
                 token && userData ?
                 <div className='flex items-center gap-2 cursor-pointer group relative'>
@@ -62,6 +63,7 @@ const Navbar = () => {
                     <img className='w-7' onClick={()=>setShowMenu(false)} src={assets.cross_icon} alt="" />
                 </div>
                 <ul className='flex flex-col items-center gap-2 mt-5 px-5 text-lg font-medium'>
+                    <a onClick={()=>setShowMenu(false)} href='https://hospital-booking-app-jpza.vercel.app/' target='_blank' rel='noreferrer' className='border border-[#0f766e] px-4 py-2 mb-3 rounded-full text-[#0f766e]'>ADMIN / DOCTOR LOGIN ↗</a>
                     <NavLink  onClick={()=>setShowMenu(false)} to={'/'}> <p className='px-4 py-2 rounded inline-block'>HOME</p></NavLink>
                     <NavLink  onClick={()=>setShowMenu(false)} to={'/doctors'}> <p className='px-4 py-2 rounded inline-block'>ALL DOCTORS</p></NavLink>
                     <NavLink  onClick={()=>setShowMenu(false)} to={'/about'}> <p className='px-4 py-2 rounded inline-block'>ABOUT</p></NavLink>
